@@ -1,14 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { api } from '../utils/api';
+import { userStorage } from '../utils/localStorage';
 
 const isValidEmail = (email) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
-const isStrongPassword = (password) =>
-  password.length >= 8 &&
-  /[a-z]/.test(password) &&
-  /[A-Z]/.test(password) &&
-  /[0-9]/.test(password) &&
-  /[^A-Za-z0-9]/.test(password);
 
 const Login = () => {
   const navigate = useNavigate();
@@ -18,11 +12,16 @@ const Login = () => {
 
   useEffect(() => {
     document.title = 'Konekta | Log-In';
-  }, []);
+    // Check if already logged in
+    if (userStorage.getCurrentUser()) {
+      navigate('/feed');
+    }
+  }, [navigate]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormValues((prev) => ({ ...prev, [name]: value }));
+    setError(''); // Clear error on input change
   };
 
   const handleSubmit = async (event) => {
@@ -35,40 +34,42 @@ const Login = () => {
     if (!isValidEmail(formValues.email)) {
       return setError('Please enter a valid email address.');
     }
-    if (!formValues.password) {
-      return setError('Please enter your password.');
-    }
 
     try {
       setLoading(true);
-      const response = await api.login({
-        username: formValues.email,
-        password: formValues.password,
-      });
-
-      if (!response?.username) {
-        throw new Error('Login failed. Check your credentials.');
+      
+      // Find user by email
+      const user = userStorage.findUserByEmail(formValues.email);
+      
+      if (!user) {
+        return setError('No account found with this email address.');
       }
 
-      localStorage.setItem('user', response.username);
+      // Verify password (in production, use hashed passwords)
+      if (user.password !== formValues.password) {
+        return setError('Incorrect password. Please try again.');
+      }
+
+      // Set current user
+      userStorage.setCurrentUser(user.id);
       navigate('/feed');
     } catch (err) {
-      setError(err.message || 'Could not connect to server.');
+      setError(err.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center px-4">
-      <main className="w-full max-w-md bg-black/70 border border-[#1f1f1f] rounded-3xl p-8 shadow-[0_0_25px_#A200FF55] backdrop-blur">
-        <h1 className="text-center text-4xl font-poppins font-bold mb-8 bg-gradient-to-r from-[#FF007A] via-[#A200FF] to-[#00F5FF] bg-clip-text text-transparent">
+    <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center px-4 animate-fade-in">
+      <main className="w-full max-w-md glass-panel p-8 animate-scale-in">
+        <h1 className="text-center text-4xl font-poppins font-bold mb-8 text-gradient animate-slide-down">
           Log-In
         </h1>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="email" className="block text-sm font-semibold text-pink-300 mb-1">
+          <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
+            <label htmlFor="email" className="block text-sm font-semibold text-brand-pink mb-2">
               Email address
             </label>
             <input
@@ -79,11 +80,11 @@ const Login = () => {
               placeholder="you@example.com"
               value={formValues.email}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-full bg-[#1a1a1a] border border-transparent focus:border-[#FF007A] focus:outline-none text-white"
+              className="input-field"
             />
           </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-semibold text-pink-300 mb-1">
+          <div className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
+            <label htmlFor="password" className="block text-sm font-semibold text-brand-pink mb-2">
               Password
             </label>
             <input
@@ -94,22 +95,34 @@ const Login = () => {
               placeholder="••••••••"
               value={formValues.password}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-full bg-[#1a1a1a] border border-transparent focus:border-[#FF007A] focus:outline-none text-white"
+              className="input-field"
             />
           </div>
 
-          {error && <p className="text-sm text-red-400">{error}</p>}
+          {error && (
+            <div className="bg-red-500/20 border border-red-500/50 rounded-2xl px-4 py-3 text-sm text-red-400 animate-slide-down">
+              {error}
+            </div>
+          )}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-full font-semibold bg-gradient-to-r from-[#FF007A] via-[#A200FF] to-[#00F5FF] hover:brightness-110 transition disabled:opacity-60"
+            className="btn-neon w-full py-3 disabled:opacity-60 disabled:cursor-not-allowed animate-slide-up"
+            style={{ animationDelay: '0.3s' }}
           >
-            {loading ? 'Logging in...' : 'Log-In'}
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <i className="fa-solid fa-spinner fa-spin" />
+                Logging in...
+              </span>
+            ) : (
+              'Log-In'
+            )}
           </button>
         </form>
 
-        <div className="flex items-center gap-4 my-6 text-gray-500">
+        <div className="flex items-center gap-4 my-6 text-gray-500 animate-fade-in" style={{ animationDelay: '0.4s' }}>
           <span className="flex-1 border-t border-[#1f1f1f]" />
           OR
           <span className="flex-1 border-t border-[#1f1f1f]" />
@@ -123,18 +136,18 @@ const Login = () => {
           data-itp_support="true"
         />
         <div
-          className="g_id_signin"
+          className="g_id_signin animate-fade-in"
           data-type="standard"
           data-theme="filled_black"
           data-size="large"
           data-shape="rectangular"
           data-logo_alignment="left"
-          style={{ width: '100%' }}
+          style={{ width: '100%', animationDelay: '0.5s' }}
         />
 
-        <p className="text-sm text-gray-400 text-center mt-6">
+        <p className="text-sm text-gray-400 text-center mt-6 animate-fade-in" style={{ animationDelay: '0.6s' }}>
           Don&apos;t have an account?{' '}
-          <Link to="/signup" className="text-[#FF007A] font-semibold">
+          <Link to="/signup" className="text-brand-pink font-semibold hover:text-brand-cyan transition-colors">
             Create one
           </Link>
         </p>
@@ -144,4 +157,5 @@ const Login = () => {
 };
 
 export default Login;
+
 

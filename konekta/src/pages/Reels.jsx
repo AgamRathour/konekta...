@@ -23,15 +23,6 @@ const defaultReels = [
     comments: 156,
     views: 8921,
   },
-  {
-    id: '3',
-    user: 'food_lover',
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-    caption: 'Delicious recipe for you 🍕',
-    likes: 987,
-    comments: 67,
-    views: 3456,
-  },
 ];
 
 const Reels = () => {
@@ -123,13 +114,13 @@ const Reels = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex">
+    <div className="min-h-screen bg-black text-white flex animate-fade-in">
       <Sidebar />
       <div className="flex-1 relative flex flex-col">
         <button
           type="button"
           onClick={() => navigate('/feed')}
-          className="absolute z-20 top-6 left-6 w-12 h-12 rounded-full bg-black/60 flex items-center justify-center border border-white/20"
+          className="absolute z-20 top-6 left-6 w-12 h-12 rounded-full bg-black/60 flex items-center justify-center border border-white/20 hover:bg-black/80 hover:scale-110 transition-all duration-300"
         >
           <i className="fa-solid fa-arrow-left" />
         </button>
@@ -137,8 +128,8 @@ const Reels = () => {
           ref={containerRef}
           className="flex-1 overflow-y-scroll scroll-smooth snap-y snap-mandatory no-scrollbar"
         >
-          {reels.map((reel) => (
-            <div key={reel.id} className="h-screen w-full snap-start relative flex items-center justify-center bg-black">
+          {reels.map((reel, index) => (
+            <div key={reel.id} className="h-screen w-full snap-start relative flex items-center justify-center bg-black animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
               <video
                 data-id={reel.id}
                 className="h-full w-full object-cover"
@@ -156,21 +147,21 @@ const Reels = () => {
                 <button
                   type="button"
                   onClick={() => handleLike(reel.id)}
-                  className={`w-14 h-14 rounded-full bg-white/10 backdrop-blur flex flex-col items-center justify-center ${
-                    reel.liked ? 'text-[#FF007A]' : ''
+                  className={`w-14 h-14 rounded-full bg-white/10 backdrop-blur flex flex-col items-center justify-center hover:scale-110 transition-all duration-300 ${
+                    reel.liked ? 'text-brand-pink shadow-neon-pink' : ''
                   }`}
                 >
-                  <i className="fa-solid fa-heart text-xl" />
+                  <i className={`fa-${reel.liked ? 'solid' : 'regular'} fa-heart text-xl`} />
                   <span className="text-xs font-semibold mt-1">{reel.likes}</span>
                 </button>
-                <div className="w-14 h-14 rounded-full bg-white/10 backdrop-blur flex flex-col items-center justify-center">
+                <div className="w-14 h-14 rounded-full bg-white/10 backdrop-blur flex flex-col items-center justify-center hover:scale-110 transition-all duration-300">
                   <i className="fa-regular fa-comment text-xl" />
                   <span className="text-xs font-semibold mt-1">{reel.comments}</span>
                 </div>
-                <div className="w-14 h-14 rounded-full bg-white/10 backdrop-blur flex flex-col items-center justify-center">
+                <div className="w-14 h-14 rounded-full bg-white/10 backdrop-blur flex flex-col items-center justify-center hover:scale-110 transition-all duration-300">
                   <i className="fa-solid fa-share text-xl" />
                 </div>
-                <div className="w-14 h-14 rounded-full bg-white/10 backdrop-blur flex flex-col items-center justify-center">
+                <div className="w-14 h-14 rounded-full bg-white/10 backdrop-blur flex flex-col items-center justify-center hover:scale-110 transition-all duration-300">
                   <i className="fa-solid fa-eye text-xl" />
                   <span className="text-xs font-semibold mt-1">{reel.views}</span>
                 </div>
@@ -184,4 +175,5 @@ const Reels = () => {
 };
 
 export default Reels;
+
 

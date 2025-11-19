@@ -27,18 +27,6 @@ const seedPosts = [
     caption: 'Neon study w/ @Cris',
     likes: 198,
   },
-  {
-    id: 'post-3',
-    image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=80',
-    caption: 'Reel shoot BTS',
-    likes: 341,
-  },
-  {
-    id: 'post-4',
-    image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=700&q=80',
-    caption: 'Studio pop-up',
-    likes: 412,
-  },
 ];
 
 const Profile = () => {
@@ -127,43 +115,37 @@ const Profile = () => {
   const prevImage = () => setLightboxIndex((prev) => (prev - 1 + posts.length) % posts.length);
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white flex">
+    <div className="min-h-screen bg-[#0A0A0A] text-white flex animate-fade-in">
       <Sidebar />
       <div className="flex-1 px-4 lg:px-12 py-10">
-        <header className="flex flex-col lg:flex-row gap-8">
-          <img src={profile.avatar} alt={profile.name} className="w-32 h-32 rounded-full object-cover border-4 border-[#FF007A]" />
+        <header className="flex flex-col lg:flex-row gap-8 animate-slide-down">
+          <img src={profile.avatar} alt={profile.name} className="w-32 h-32 rounded-full object-cover border-4 border-brand-pink hover:scale-105 transition-transform duration-300 shadow-neon-pink" />
           <div className="flex-1 space-y-4">
             <div className="flex flex-wrap items-center gap-4">
-              <h1 className="text-3xl font-poppins font-semibold">{profile.name}</h1>
+              <h1 className="text-3xl font-poppins font-semibold text-gradient">{profile.name}</h1>
               <button
                 type="button"
                 onClick={() => setShowEditModal(true)}
-                className="px-4 py-2 rounded-full border border-[#333] hover:border-[#FF007A]"
+                className="btn-outline px-4 py-2"
               >
                 Edit profile
               </button>
               <button
                 type="button"
                 onClick={() => setShowCreateModal(true)}
-                className="px-4 py-2 rounded-full bg-gradient-to-r from-[#FF007A] to-[#00F5FF] text-black font-semibold"
+                className="btn-neon px-4 py-2"
               >
                 Create post
               </button>
             </div>
             <p className="text-gray-300 max-w-2xl">{profile.bio}</p>
-            <a href={`https://${profile.link}`} target="_blank" rel="noreferrer" className="text-[#00F5FF] text-sm">
+            <a href={`https://${profile.link}`} target="_blank" rel="noreferrer" className="text-brand-cyan text-sm hover:text-brand-pink transition-colors">
               {profile.link}
             </a>
             <div className="flex gap-6 text-sm">
-              <span>
-                <strong>{posts.length}</strong> posts
-              </span>
-              <span>
-                <strong>5.2k</strong> followers
-              </span>
-              <span>
-                <strong>384</strong> following
-              </span>
+              <span><strong>{posts.length}</strong> posts</span>
+              <span><strong>5.2k</strong> followers</span>
+              <span><strong>384</strong> following</span>
             </div>
           </div>
         </header>
@@ -172,28 +154,24 @@ const Profile = () => {
           {posts.map((post, index) => (
             <div
               key={post.id}
-              className="relative group cursor-pointer"
+              className="relative group cursor-pointer animate-scale-in"
+              style={{ animationDelay: `${index * 0.1}s` }}
               onClick={() => openLightbox(index)}
-              onKeyDown={() => {}}
-              role="presentation"
             >
-              <img src={post.image} alt={post.caption} className="aspect-square object-cover rounded-2xl" />
+              <img src={post.image} alt={post.caption} className="aspect-square object-cover rounded-2xl hover:scale-105 transition-transform duration-300" />
               <button
                 type="button"
                 onClick={(event) => {
                   event.stopPropagation();
                   deletePost(post.id);
                 }}
-                className="absolute top-3 left-3 w-10 h-10 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition"
+                className="absolute top-3 left-3 w-10 h-10 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
               >
                 <i className="fa-regular fa-trash-can" />
               </button>
-              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-4 text-lg font-semibold">
+              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 text-lg font-semibold">
                 <span className="flex items-center gap-2">
                   <i className="fa-regular fa-heart" /> {post.likes}
-                </span>
-                <span className="flex items-center gap-2">
-                  <i className="fa-regular fa-comment-dots" /> {Math.floor(post.likes / 4) || 0}
                 </span>
               </div>
             </div>
@@ -202,45 +180,45 @@ const Profile = () => {
       </div>
 
       {lightboxIndex !== null && posts[lightboxIndex] && (
-        <div className="fixed inset-0 bg-black/90 backdrop-blur flex items-center justify-center z-50">
-          <button type="button" onClick={closeLightbox} className="absolute top-6 right-8 text-2xl">
+        <div className="fixed inset-0 bg-black/90 backdrop-blur flex items-center justify-center z-50 animate-fade-in">
+          <button type="button" onClick={closeLightbox} className="absolute top-6 right-8 text-2xl hover:scale-110 transition-transform duration-300">
             <i className="fa-regular fa-circle-xmark" />
           </button>
-          <button type="button" onClick={prevImage} className="absolute left-8 text-3xl">
+          <button type="button" onClick={prevImage} className="absolute left-8 text-3xl hover:scale-110 transition-transform duration-300">
             ‹
           </button>
           <div className="max-w-3xl flex flex-col gap-4 items-center">
-            <img src={posts[lightboxIndex].image} alt="lightbox" className="w-full rounded-3xl object-cover" />
+            <img src={posts[lightboxIndex].image} alt="lightbox" className="w-full rounded-3xl object-cover animate-scale-in" />
             <p className="text-sm text-gray-300">{posts[lightboxIndex].caption}</p>
             <button
               type="button"
               onClick={() => toggleLike(posts[lightboxIndex].id)}
-              className={`px-4 py-2 rounded-full ${
-                posts[lightboxIndex].liked ? 'bg-[#FF007A]' : 'bg-white/10'
+              className={`px-4 py-2 rounded-full transition-all duration-300 hover:scale-110 ${
+                posts[lightboxIndex].liked ? 'bg-brand-pink shadow-neon-pink' : 'bg-white/10'
               }`}
             >
               <i className="fa-regular fa-heart mr-2" />
               {posts[lightboxIndex].likes} likes
             </button>
           </div>
-          <button type="button" onClick={nextImage} className="absolute right-8 text-3xl">
+          <button type="button" onClick={nextImage} className="absolute right-8 text-3xl hover:scale-110 transition-transform duration-300">
             ›
           </button>
         </div>
       )}
 
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur flex items-center justify-center z-50 px-4">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur flex items-center justify-center z-50 px-4 animate-fade-in">
           <form
             onSubmit={handleCreatePost}
-            className="w-full max-w-md bg-[#111] border border-[#1f1f1f] rounded-3xl p-6 space-y-4"
+            className="w-full max-w-md glass-panel p-6 space-y-4 animate-scale-in"
           >
-            <h3 className="text-xl font-semibold">Create new post</h3>
+            <h3 className="text-xl font-semibold text-gradient">Create new post</h3>
             <textarea
               value={createForm.caption}
               onChange={(event) => setCreateForm((prev) => ({ ...prev, caption: event.target.value }))}
               placeholder="Write a caption..."
-              className="w-full bg-black/40 border border-transparent focus:border-[#FF007A] rounded-2xl px-4 py-3 text-sm text-white"
+              className="w-full bg-black/40 border border-transparent focus:border-brand-pink rounded-2xl px-4 py-3 text-sm text-white input-field"
             />
             <input
               ref={fileInputRef}
@@ -251,13 +229,10 @@ const Profile = () => {
             />
             {error && <p className="text-sm text-red-400">{error}</p>}
             <div className="flex justify-end gap-3">
-              <button type="button" onClick={() => setShowCreateModal(false)} className="px-4 py-2 rounded-full border border-[#333]">
+              <button type="button" onClick={() => setShowCreateModal(false)} className="btn-outline px-4 py-2">
                 Cancel
               </button>
-              <button
-                type="submit"
-                className="px-4 py-2 rounded-full bg-gradient-to-r from-[#FF007A] to-[#00F5FF] text-black font-semibold"
-              >
+              <button type="submit" className="btn-neon px-4 py-2">
                 Post
               </button>
             </div>
@@ -266,19 +241,19 @@ const Profile = () => {
       )}
 
       {showEditModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur flex items-center justify-center z-50 px-4">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur flex items-center justify-center z-50 px-4 animate-fade-in">
           <form
             onSubmit={handleEditProfile}
-            className="w-full max-w-md bg-[#111] border border-[#1f1f1f] rounded-3xl p-6 space-y-4"
+            className="w-full max-w-md glass-panel p-6 space-y-4 animate-scale-in"
           >
-            <h3 className="text-xl font-semibold">Edit profile</h3>
+            <h3 className="text-xl font-semibold text-gradient">Edit profile</h3>
             <label className="text-sm text-gray-400 flex flex-col gap-2">
               Display name
               <input
                 type="text"
                 value={editForm.name}
                 onChange={(event) => setEditForm((prev) => ({ ...prev, name: event.target.value }))}
-                className="w-full bg-black/40 border border-transparent focus:border-[#FF007A] rounded-2xl px-4 py-2 text-white"
+                className="input-field"
               />
             </label>
             <label className="text-sm text-gray-400 flex flex-col gap-2">
@@ -286,7 +261,7 @@ const Profile = () => {
               <textarea
                 value={editForm.bio}
                 onChange={(event) => setEditForm((prev) => ({ ...prev, bio: event.target.value }))}
-                className="w-full bg-black/40 border border-transparent focus:border-[#FF007A] rounded-2xl px-4 py-2 text-white"
+                className="input-field"
               />
             </label>
             <label className="text-sm text-gray-400 flex flex-col gap-2">
@@ -295,7 +270,7 @@ const Profile = () => {
                 type="text"
                 value={editForm.link}
                 onChange={(event) => setEditForm((prev) => ({ ...prev, link: event.target.value }))}
-                className="w-full bg-black/40 border border-transparent focus:border-[#FF007A] rounded-2xl px-4 py-2 text-white"
+                className="input-field"
               />
             </label>
             <label className="text-sm text-gray-400 flex flex-col gap-2">
@@ -303,13 +278,10 @@ const Profile = () => {
               <input ref={editAvatarRef} type="file" accept="image/*" className="text-gray-400" />
             </label>
             <div className="flex justify-end gap-3">
-              <button type="button" onClick={() => setShowEditModal(false)} className="px-4 py-2 rounded-full border border-[#333]">
+              <button type="button" onClick={() => setShowEditModal(false)} className="btn-outline px-4 py-2">
                 Cancel
               </button>
-              <button
-                type="submit"
-                className="px-4 py-2 rounded-full bg-gradient-to-r from-[#FF007A] to-[#00F5FF] text-black font-semibold"
-              >
+              <button type="submit" className="btn-neon px-4 py-2">
                 Save
               </button>
             </div>
@@ -321,4 +293,5 @@ const Profile = () => {
 };
 
 export default Profile;
+
 

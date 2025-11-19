@@ -1,17 +1,18 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { userStorage } from '../utils/localStorage';
 
 export const useAuthGuard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (!storedUser) {
+    const user = userStorage.getCurrentUser();
+    if (!user) {
       navigate('/login');
     }
   }, [navigate]);
 
-  const username = localStorage.getItem('user');
-  return username;
+  return userStorage.getCurrentUser();
 };
+
 

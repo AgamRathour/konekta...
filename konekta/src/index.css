@@ -44,15 +44,23 @@
 
 @layer components {
   .btn-neon {
-    @apply font-semibold rounded-full bg-gradient-to-r from-brand-pink via-brand-purple to-brand-cyan text-black shadow-btn-neon hover:brightness-110 transition-all;
+    @apply font-semibold rounded-full bg-gradient-to-r from-brand-pink via-brand-purple to-brand-cyan text-white shadow-neon-pink hover:shadow-glow hover:scale-105 active:scale-95 transition-all duration-300;
+  }
+
+  .btn-outline {
+    @apply font-semibold rounded-full border-2 border-brand-pink text-brand-pink hover:bg-brand-pink hover:text-white hover:scale-105 active:scale-95 transition-all duration-300;
   }
 
   .glass-panel {
-    @apply bg-black/60 border border-white/10 rounded-3xl shadow-panel-glow backdrop-blur;
+    @apply bg-black/60 border border-white/10 rounded-3xl shadow-glow backdrop-blur-xl;
   }
 
   .chip {
-    @apply px-3 py-1 text-xs font-semibold uppercase tracking-wide rounded-full bg-white/5 border border-white/10;
+    @apply px-3 py-1 text-xs font-semibold uppercase tracking-wide rounded-full bg-white/5 border border-white/10 hover:border-brand-pink transition-all duration-300;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 rounded-full bg-[#1a1a1a] border border-transparent focus:border-brand-pink focus:outline-none text-white placeholder:text-gray-500 transition-all duration-300 focus:shadow-neon-pink;
   }
 }
 
@@ -75,5 +83,60 @@
     background: linear-gradient(90deg, #ff007a, #e900b5, #a200ff, #00f5ff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }
+
+/* Additional animations */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-bounce {
+  animation: bounce 0.6s ease-in-out;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Button hover effects */
+button:active {
+  transform: scale(0.95);
+  transition: transform 0.1s ease;
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition-property: transform, opacity, background-color, border-color, color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
