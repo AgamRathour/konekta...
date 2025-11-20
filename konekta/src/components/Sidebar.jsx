@@ -5,7 +5,7 @@ import { userStorage } from '../utils/localStorage';
 const navItems = [
   { label: 'Home', to: '/feed', iconClass: 'fa-solid fa-house' },
   { label: 'Reels', to: '/reels', iconClass: 'fa-solid fa-clapperboard' },
-  { label: 'Messages', to: '/messenger', iconClass: 'fa-regular fa-envelope', badge: '8' },
+  { label: 'Messages', to: 'https://leafy-custard-e696d3.netlify.app', iconClass: 'fa-regular fa-envelope', badge: '8' },
   { label: 'Notifications', to: '/notifications', iconClass: 'fa-regular fa-bell' },
   { label: 'Profile', to: '/profile', iconClass: 'fa-regular fa-user' },
 ];

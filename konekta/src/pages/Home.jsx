@@ -52,7 +52,7 @@ const Home = () => {
 
         <div className="flex-1 max-w-md animate-scale-in" style={{ animationDelay: '0.3s' }}>
           <img
-            src="/hero.jpg"
+            src="https://github.com/Dragonsin2006/konekta/blob/main/images/WhatsApp%20Image%202025-08-20%20at%2020.10.48.jpeg.jpg?raw=true"
             alt="Konekta preview"
             className="rounded-[36px] w-full shadow-glow hover:scale-105 transition-transform duration-500"
           />
